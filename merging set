@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to acquire float numbers from the user and fill an array
+void fillArrayWithUserInput(float *arr, int size) {
+    printf("Enter %d float numbers:\n", size);
+    for (int i = 0; i < size; i++) {
+        scanf("%f", &arr[i]);
+    }
+}
+
+// Function to merge two sets of float numbers into one array
+void mergeArrays(float *arr1, int size1, float *arr2, int size2, float *mergedArr) {
+    int i, j;
+
+    // Copy elements from the first array
+    for (i = 0; i < size1; i++) {
+        mergedArr[i] = arr1[i];
+    }
+
+    // Copy elements from the second array
+    for (j = 0; j < size2; j++) {
+        mergedArr[i] = arr2[j];
+        i++;
+    }
+}
+
+// Function to display the content of an array
+void displayArray(float *arr, int size) {
+    printf("Array elements: ");
+    for (int i = 0; i < size; i++) {
+        printf("%.2f ", arr[i]);
+    }
+    printf("\n");
+}
+
+// Function to write an array to a binary file
+void writeArrayToBinaryFile(float *arr, int size, const char *filename) {
+    FILE *file = fopen(filename, "wb");
+    if (file != NULL) {
+        fwrite(arr, sizeof(float), size, file);
+        fclose(file);
+        printf("Array written to binary file successfully.\n");
+    } else {
+        printf("Failed to write to binary file.\n");
+    }
+}
+
+// Function to read an array from a binary file and display its content
+void readArrayFromBinaryFileAndDisplay(const char *filename, int size) {
+    float *arr = (float *)malloc(size * sizeof(float));
+    if (arr == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    FILE *file = fopen(filename, "rb");
+    if (file != NULL) {
+        fread(arr, sizeof(float), size, file);
+        fclose(file);
+        displayArray(arr, size);
+        free(arr);
+    } else {
+        printf("Failed to read from binary file.\n");
+        free(arr);
+    }
+}
+
+int main() {
+    int size1, size2;
+
+    printf("Enter the size of the first array: ");
+    scanf("%d", &size1);
+    float arr1[size1];
+    fillArrayWithUserInput(arr1, size1);
+
+    printf("Enter the size of the second array: ");
+    scanf("%d", &size2);
+    float arr2[size2];
+    fillArrayWithUserInput(arr2, size2);
+
+    // Calculate the size of the merged array
+    int mergedSize = size1 + size2;
+    float mergedArr[mergedSize];
+    mergeArrays(arr1, size1, arr2, size2, mergedArr);
+
+    // Display the merged array
+    displayArray(mergedArr, mergedSize);
+
+    // Write the merged array to a binary file
+    writeArrayToBinaryFile(mergedArr, mergedSize, "combined_data.bin");
+
+    // Read the merged array from the binary file and display its content
+    readArrayFromBinaryFileAndDisplay("combined_data.bin", mergedSize);
+
+    return 0;
+}
+// 
+
+In this program, we have six functions:
+
+'fillArrayWithUserInput': This function acquires float numbers from the user and fills an array with them.
+'mergeArrays': This function merges the two sets of float numbers into one array.
+'displayArray': This function displays the content of an array.
+'writeArrayToBinaryFile': This function writes an array to a binary file.
+'readArrayFromBinaryFileAndDisplay': This function reads an array from a binary file and displays its content.
+The 'main' function prompts the user to enter the size and elements for two arrays, then merges them into a new array. It then displays the merged array, writes it to a binary file, and reads the content back from the file to display it again to ensure that the merging and storing worked fine.
